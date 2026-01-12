@@ -1,40 +1,108 @@
-//* Get all products
+const Product = require("../modules/product.module");
+
 const getAllProducts = async (req, res) => {
   try {
-    // logic here
+    const products = await Product.find();
+
+    return res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      count: products.length,
+      data: products,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to fetch products" });
+    console.error("Get Products Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error while fetching products",
+    });
   }
 };
 
-//* Create new product
 const createProduct = async (req, res) => {
   try {
-    // logic here
+    const newProduct = new Product(req.body);
+    const savedProduct = await newProduct.save();
+    res.status(201).json({
+      success: true,
+      message: "Product created successfully",
+      data: savedProduct,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to create product" });
+
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res
+        .status(400)
+        .json({ success: false, message: messages.join(", ") });
+    }
+
+    // Handle duplicate key errors...
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: `Duplicate value error: ${JSON.stringify(error.keyValue)}`,
+      });
+    }
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to create product" });
   }
 };
 
-//* Update product
 const updateProduct = async (req, res) => {
   try {
-    // logic here
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    Object.assign(product, req.body);
+    const updatedProduct = await product.save();
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to update product" });
+
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res
+        .status(400)
+        .json({ success: false, message: messages.join(", ") });
+    }
+
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: `Duplicate value error: ${JSON.stringify(error.keyValue)}`,
+      });
+    }
+
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to update product" });
   }
 };
 
-//* Delete product
 const deleteProduct = async (req, res) => {
   try {
-    // logic here
+    const productId = req.params.id;
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+    if (!deletedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to delete product" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to delete product" });
   }
 };
 
