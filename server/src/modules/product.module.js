@@ -25,13 +25,11 @@ const productSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      trim: true,
       min: 0,
       required: true,
     },
     discountPrice: {
       type: Number,
-      trim: true,
       min: 0,
       validate: {
         validator: function (value) {
@@ -71,9 +69,10 @@ const productSchema = new mongoose.Schema(
     images: {
       type: [String],
       validate: {
-        validator: (arr) => arr.length > 0,
+        validator: (arr) => true, // allow empty array
         message: "At least one product image is required",
       },
+      default: [],
     },
 
     isOrganic: {

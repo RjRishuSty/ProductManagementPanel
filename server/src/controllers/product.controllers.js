@@ -22,9 +22,10 @@ const getAllProducts = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const newProduct = new Product(req.body);
+    const newProduct = new Product(req.body); // Make sure req.body matches schema
     const savedProduct = await newProduct.save();
-    res.status(201).json({
+
+    return res.status(201).json({
       success: true,
       message: "Product created successfully",
       data: savedProduct,
@@ -33,58 +34,56 @@ const createProduct = async (req, res) => {
     console.error(error);
 
     if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map((err) => err.message);
-      return res
-        .status(400)
-        .json({ success: false, message: messages.join(", ") });
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ success: false, message: messages.join(", ") });
     }
 
-    // Handle duplicate key errors...
     if (error.code === 11000) {
       return res.status(409).json({
         success: false,
-        message: `Duplicate value error: ${JSON.stringify(error.keyValue)}`,
+        message: `Duplicate value error: ${JSON.stringify(error.keyValue)}`
       });
     }
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to create product" });
+
+    return res.status(500).json({ success: false, message: "Failed to create product" });
   }
 };
+
 
 const updateProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: "Product not found" });
-    Object.assign(product, req.body);
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    Object.assign(product, req.body); // Merge updates
     const updatedProduct = await product.save();
-    res.status(200).json({
+
+    return res.status(200).json({
       success: true,
       message: "Product updated successfully",
-      data: updatedProduct,
+      data: updatedProduct
     });
   } catch (error) {
     console.error(error);
 
     if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map((err) => err.message);
-      return res
-        .status(400)
-        .json({ success: false, message: messages.join(", ") });
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ success: false, message: messages.join(", ") });
     }
 
     if (error.code === 11000) {
       return res.status(409).json({
         success: false,
-        message: `Duplicate value error: ${JSON.stringify(error.keyValue)}`,
+        message: `Duplicate value error: ${JSON.stringify(error.keyValue)}`
       });
     }
 
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to update product" });
+    return res.status(500).json({ success: false, message: "Failed to update product" });
   }
 };
+
 
 const deleteProduct = async (req, res) => {
   try {

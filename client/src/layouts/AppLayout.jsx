@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Box, CssBaseline, Toolbar } from "@mui/material";
@@ -17,7 +16,7 @@ const AppLayout = () => {
     setDrawerWidth((prev) =>
       prev === DRAWER_OPEN_WIDTH ? DRAWER_CLOSE_WIDTH : DRAWER_OPEN_WIDTH
     );
-  },[]);
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -27,17 +26,17 @@ const AppLayout = () => {
       <Box
         component="main"
         sx={{
-          border:'2px solid red',
+          // border: "2px solid red",
+          position:'relative',
           flexGrow: 1,
           width: `calc(100% - ${drawerWidth}px)`,
-          mt: 3,
           p: 2,
           transition: "all 0.3s ease",
         }}
       >
         <Toolbar />
         <Outlet />
-        <Footer />
+        {/* <Footer /> */}
       </Box>
     </Box>
   );

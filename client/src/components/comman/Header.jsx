@@ -1,4 +1,4 @@
-// Header.jsx
+
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
@@ -17,6 +17,9 @@ const Header = ({ drawerWidth, onDrawerToggle }) => {
       sx={{
         width: `calc(100% - ${drawerWidth}px)`,
         ml: `${drawerWidth}px`,
+        bgcolor:"primary.main",
+        borderBottom:'1px solid #ccc',
+        borderLeft:"1px solid #ccc",
         transition: "all 0.3s ease",
       }}
     >

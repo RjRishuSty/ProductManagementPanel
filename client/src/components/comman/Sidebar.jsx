@@ -1,36 +1,74 @@
-// Sidebar.jsx
-import React from "react";
-import { Drawer, Toolbar, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  Collapse,
+  Typography,
+  Box,
+} from "@mui/material";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Logo from "./logo";
+import { sidebarData } from "../../objectData/sidebarData";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ drawerWidth }) => {
+  // 👇 default open = dashboard
+  const [openMenu, setOpenMenu] = useState("dashboard");
+
+  const handleToggle = (id) => {
+    setOpenMenu((prev) => (prev === id ? null : id));
+  };
+
   return (
     <Drawer
       variant="permanent"
+      color="inherit"
       sx={{
         width: drawerWidth,
-        flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: drawerWidth,
-          boxSizing: "border-box",
-          overflowX: "hidden",
-          transition: "width 0.3s ease",
+          height:'100dvh',
+          // overflowY:'scroll',
+          bgcolor: "primary.main",
+          borderRight:'1px solid #ccc',
         },
       }}
     >
-      <Toolbar />
-      <List>
-        {["Dashboard", "Users", "Products", "Settings"].map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText
-                primary={text}
-                sx={{
-                  opacity: drawerWidth === 100 ? 0 : 1,
-                  transition: "opacity 0.2s",
-                }}
-              />
+      <Logo />
+
+      <List sx={{height:'100%',mt:1,p:1.7}}>
+        {sidebarData.map((item) => (
+          <Box key={item.id}>
+            <Typography
+            variant="caption"
+              sx={{
+                opacity: 0.8,
+                color:'text.primary',
+              }}
+            >
+              {item.section}
+            </Typography>
+
+            {/* Parent Menu */}
+            <ListItemButton onClick={() => handleToggle(item.id)} sx={{mb:1 ,mt:0.5,bgcolor:'primary.light',borderRadius:0.5}}>
+              <ListItemText primary={item.title} />
+              {openMenu === item.id ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-          </ListItem>
+
+            {/* Dropdown */}
+            <Collapse in={openMenu === item.id} timeout="auto" unmountOnExit sx={{mb:1}}>
+              <List component="div" disablePadding>
+                {item.children.map((child) => (
+                  <ListItemButton component={Link} to={child?.path} key={child} sx={{ pl: 4 }}>
+                    <ListItemText primary={child?.label} />
+                  </ListItemButton>
+                ))}
+              </List>
+            </Collapse>
+          </Box>
         ))}
       </List>
     </Drawer>

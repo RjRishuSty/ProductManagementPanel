@@ -6,9 +6,12 @@ import AppLayout from "./layouts/AppLayout";
 import DashboardPage from "./pages/DashboardPage";
 import { darkTheme, lightTheme } from "./theme";
 import { useSelector } from "react-redux";
+import ProductsPage from "./pages/ProductsPage";
+import AllProducts from "./components/ProductsComponents/AllProducts";
+import AddProduct from "./components/ProductsComponents/AddProduct";
 
 const App = () => {
-  const mode = useSelector((state)=>state.mode);
+  const mode = useSelector((state) => state.mode);
 
   const router = createBrowserRouter([
     {
@@ -18,6 +21,14 @@ const App = () => {
         {
           index: true,
           element: <DashboardPage />,
+        },
+        {
+          path: "product",
+          element: <ProductsPage />,
+          children: [
+            { index: true, element: <AllProducts /> },            
+            { path: "new", element: <AddProduct  /> },   
+          ],
         },
       ],
     },

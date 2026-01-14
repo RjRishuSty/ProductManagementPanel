@@ -1,12 +1,12 @@
 
 import { createTheme } from "@mui/material/styles";
 
-
+/* ---------------- COMMON SETTINGS ---------------- */
 const commonSettings = {
   typography: {
     fontFamily: `"Inter", "Roboto", "Helvetica", "Arial", sans-serif`,
     h1: { fontSize: "2rem", fontWeight: 600 },
-    h2: { fontSize: "1.75rem", fontWeight: 600 },
+    h2: { fontSize: "1.75rem", fontWeight: 700 },
     h3: { fontSize: "1.5rem", fontWeight: 600 },
     h4: { fontSize: "1.25rem", fontWeight: 600 },
     h5: { fontSize: "1.1rem", fontWeight: 600 },
@@ -19,38 +19,84 @@ const commonSettings = {
   },
 
   components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          textTransform: "none",
-          fontWeight: 500,
-          borderRadius: 8,
-        },
-      },
-    },
-
     MuiCard: {
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
         },
       },
     },
 
-    MuiTextField: {
-      defaultProps: {
-        size: "small",
-      },
-    },
+   MuiOutlinedInput: {
+    styleOverrides: {
+      root: {
+        borderRadius: 8,
 
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderColor: "#000", // default border (black)
+        },
+
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+          borderColor: "#ccc", // hover border
+        },
+
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: "#7E22CE", // focus border (purple)
+          borderWidth: "2px",
         },
       },
     },
+  },
+
+  MuiTextField: {
+    defaultProps: {
+      variant: "outlined",
+      size: "small",
+    },
+  },
+
+  MuiSelect: {
+    defaultProps: {
+      variant: "outlined",
+      size: "small",
+    },
+    styleOverrides: {
+      root: {
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderColor: "#000",
+        },
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+          borderColor: "#ccc",
+        },
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: "#7E22CE",
+          borderWidth: "2px",
+        },
+      },
+    },
+  },
+
+  MuiCheckbox: {
+    styleOverrides: {
+      root: {
+        color: "#000",
+        "&.Mui-checked": {
+          color: "#7E22CE",
+        },
+      },
+    },
+  },
+
+  MuiFormLabel: {
+    styleOverrides: {
+      root: {
+        color: "#555",
+        "&.Mui-focused": {
+          color: "#7E22CE",
+        },
+      },
+    },
+  },
 
     MuiAppBar: {
       styleOverrides: {
@@ -59,31 +105,21 @@ const commonSettings = {
         },
       },
     },
-
-    MuiTableHead: {
-      styleOverrides: {
-        root: {
-          fontWeight: 600,
-        },
-      },
-    },
   },
 };
 
-//*  LIGHT THEME 
+/* ---------------- LIGHT THEME ---------------- */
 export const lightTheme = createTheme({
   ...commonSettings,
   palette: {
     mode: "light",
-
-    primary: {
-      main: "#2563EB", // Blue (Admin professional)
-      light: "#3B82F6",
-      dark: "#1E40AF",
+     primary: {
+      main: "#fff",
+      dark: "#7E22CE",
     },
 
     secondary: {
-      main: "#9333EA", // Violet
+      main: "#F3E8FF",
     },
 
     success: {
@@ -109,23 +145,27 @@ export const lightTheme = createTheme({
     },
 
     divider: "#E5E7EB",
+
+    action: {
+      hover: "rgba(0,0,0,0.04)",
+      selected: "rgba(0,0,0,0.08)",
+    },
   },
 });
 
-//* DARK THEME 
+/* ---------------- DARK THEME ---------------- */
 export const darkTheme = createTheme({
   ...commonSettings,
   palette: {
     mode: "dark",
 
     primary: {
-      main: "#3B82F6",
-      light: "#60A5FA",
-      dark: "#1D4ED8",
+      main: "#000",
+      dark: "#000",
     },
 
     secondary: {
-      main: "#A855F7",
+      main: "#9333EA", // ✅ REQUIRED
     },
 
     success: {
@@ -151,11 +191,14 @@ export const darkTheme = createTheme({
     },
 
     divider: "#334155",
+
+    action: {
+      hover: "rgba(255,255,255,0.08)",
+      selected: "rgba(255,255,255,0.12)",
+    },
   },
 
   components: {
-    ...commonSettings.components,
-
     MuiCard: {
       styleOverrides: {
         root: {
@@ -166,4 +209,3 @@ export const darkTheme = createTheme({
     },
   },
 });
-
